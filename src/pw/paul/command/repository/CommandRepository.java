@@ -1,5 +1,7 @@
 package pw.paul.command.repository;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
@@ -51,10 +53,52 @@ public final class CommandRepository {
       .findFirst();
   }
 
+  /**
+   * Finds a {@link Command} by a given Name.
+   *
+   * @param name Name to search with.
+   *
+   * @return {@link Optional} of queried {@link Command}.
+   */
+  public Optional<Command> findCommandByAliases(String name) {
+    return this.commandSet.stream().filter(command -> {
+      if (command.isIgnoreCase()) {
+        return command.getName().equalsIgnoreCase(name) || Arrays
+          .stream(command.getAliases()).anyMatch(name::equalsIgnoreCase);
+      } else {
+        return command.getName().equals(name) || Arrays.asList(command.getAliases())
+          .contains(name);
+      }
+    }).findFirst();
+  }
+
+  /**
+   * Handles an incoming message.
+   *
+   * @param message The incoming message as {@link String}.
+   */
   public void onMessageReceived(String message) {
     if (!message.startsWith(this.prefix)) {
       return;
     }
+
+    String[] messageArguments = message.split("\\s+");
+
+    String commandName = messageArguments[0].substring(1);
+
+    Optional<Command> queryCommand = this.findCommandByAliases(commandName);
+
+    queryCommand.ifPresent(command -> {
+      String[] params = Arrays.copyOfRange(messageArguments, 1, messageArguments.length);
+
+      Method method = command.findMethod();
+
+      try {
+        method.invoke(command, (Object[]) params);
+      } catch (IllegalAccessException | InvocationTargetException e) {
+        e.printStackTrace();
+      }
+    });
   }
 
   /**

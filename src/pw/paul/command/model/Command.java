@@ -1,6 +1,11 @@
 package pw.paul.command.model;
 
+import java.lang.reflect.Method;
+import java.util.Arrays;
+
 import pw.paul.command.exception.CommandNotDescribedException;
+import pw.paul.command.exception.MissingExecuteDefinitionException;
+import pw.paul.command.model.execution.Execute;
 
 /**
  * Command to execute actions.
@@ -45,6 +50,16 @@ public class Command {
       throw new CommandNotDescribedException();
     }
     return this.getClass().getAnnotation(CommandInfo.class);
+  }
+
+  /**
+   * @return Finds the "execution" method.
+   */
+  public final Method findMethod() {
+    return Arrays.stream(this.getClass().getDeclaredMethods())
+      .peek(method -> method.setAccessible(true))
+      .filter(method -> method.isAnnotationPresent(Execute.class)).findFirst()
+      .orElseThrow(MissingExecuteDefinitionException::new);
   }
 
 }

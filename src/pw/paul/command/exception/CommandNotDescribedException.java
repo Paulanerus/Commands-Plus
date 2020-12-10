@@ -8,5 +8,5 @@ import pw.paul.command.model.CommandInfo;
  *
  * @author Paul
  */
-public class CommandNotDescribedException extends RuntimeException {
+public final class CommandNotDescribedException extends RuntimeException {
 }
