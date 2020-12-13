@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import pw.paul.command.model.Command;
+import pw.paul.convert.transform.Transformer;
 
 /**
  * Repository for all loaded {@link Command}'s.
@@ -94,7 +95,7 @@ public final class CommandRepository {
       Method method = command.findMethod();
 
       try {
-        method.invoke(command, (Object[]) params);
+        method.invoke(command, Transformer.create(params).toArray(method));
       } catch (IllegalAccessException | InvocationTargetException e) {
         e.printStackTrace();
       }
