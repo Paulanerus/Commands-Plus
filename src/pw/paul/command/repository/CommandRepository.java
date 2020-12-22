@@ -29,8 +29,6 @@ public final class CommandRepository {
 
   public CommandRepository(final String prefix) {
     this.prefix = prefix;
-
-    System.out.println("Command+ by Paul.");
   }
 
   /**
@@ -92,7 +90,19 @@ public final class CommandRepository {
     queryCommand.ifPresent(command -> {
       String[] params = Arrays.copyOfRange(messageArguments, 1, messageArguments.length);
 
-      Method method = command.findMethod();
+      Method method;
+
+      if (command.isSubCommand(params[0])) {
+        Optional<Method> subCommandMethod = command.findSubMethod(params[0]);
+        if (subCommandMethod.isPresent()) {
+          method = subCommandMethod.get();
+          params = Arrays.copyOfRange(params, 1, params.length);
+        } else {
+          method = command.findMethod();
+        }
+      } else {
+        method = command.findMethod();
+      }
 
       try {
         method.invoke(command, Transformer.create(params).toArray(method));

@@ -9,7 +9,7 @@ import pw.paul.convert.model.Primitive;
  * @author Paul
  */
 @Primitive(classes = {Long.class, long.class})
-public class LongType implements Convertible<Long> {
+public final class LongType implements Convertible<Long> {
 
   /**
    * {@inheritDoc}

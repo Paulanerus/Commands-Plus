@@ -4,7 +4,7 @@ import pw.paul.convert.model.Convertible;
 import pw.paul.convert.model.Primitive;
 
 @Primitive(classes = {Boolean.class, boolean.class})
-public class BooleanType implements Convertible<Boolean> {
+public final class BooleanType implements Convertible<Boolean> {
 
   @Override
   public Boolean convert(String[] param) {

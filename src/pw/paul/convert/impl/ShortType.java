@@ -9,7 +9,7 @@ import pw.paul.convert.model.Primitive;
  * @author Paul
  */
 @Primitive(classes = {Short.class, short.class})
-public class ShortType implements Convertible<Short> {
+public final class ShortType implements Convertible<Short> {
 
   /**
    * {@inheritDoc}

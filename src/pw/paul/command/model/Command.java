@@ -2,10 +2,12 @@ package pw.paul.command.model;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Optional;
 
 import pw.paul.command.exception.CommandNotDescribedException;
 import pw.paul.command.exception.MissingExecuteDefinitionException;
 import pw.paul.command.model.execution.Execute;
+import pw.paul.command.model.execution.SubExecute;
 
 /**
  * Command to execute actions.
@@ -50,6 +52,56 @@ public class Command {
       throw new CommandNotDescribedException();
     }
     return this.getClass().getAnnotation(CommandInfo.class);
+  }
+
+  /**
+   * Checks if the given identifier is a subcommand.
+   *
+   * @param identifier The identifier to check.
+   *
+   * @return True, if the given identifier is a subcommand.
+   */
+  public boolean isSubCommand(String identifier) {
+    return Arrays.stream(this.getSubCommands())
+      .anyMatch(subCommand -> subCommand.equalsIgnoreCase(identifier));
+  }
+
+  /**
+   * @return True, if this command has subcommand.
+   */
+  private boolean hasSubCommands() {
+    return this.getClass().isAnnotationPresent(SubCommands.class) && this.getClass()
+      .getAnnotation(SubCommands.class).subCommands().length > 0;
+  }
+
+  /**
+   * @return Every subcommand of this {@link Command}.
+   */
+  private String[] getSubCommands() {
+    if (!this.hasSubCommands()) {
+      return new String[]{};
+    }
+
+    return this.getClass().getAnnotation(SubCommands.class).subCommands();
+  }
+
+  /**
+   * Finds a subcommand method by an identifier and returns the result as an {@link
+   * Optional<Method>}
+   *
+   * @param identifier The identifier to search for.
+   *
+   * @return The result as an {@link Optional<Method>}
+   */
+  public final Optional<Method> findSubMethod(String identifier) {
+    return Arrays.stream(this.getClass().getDeclaredMethods())
+      .peek(method -> method.setAccessible(true))
+      .filter(method -> method.isAnnotationPresent(
+        SubExecute.class)).filter(
+        method -> method.getAnnotation(SubExecute.class).ignoreCase() ? method
+          .getAnnotation(SubExecute.class).identifier().equalsIgnoreCase(identifier)
+          : method.getAnnotation(SubExecute.class).identifier().equals(identifier))
+      .findFirst();
   }
 
   /**

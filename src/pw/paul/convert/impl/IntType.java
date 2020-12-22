@@ -9,7 +9,7 @@ import pw.paul.convert.model.Primitive;
  * @author Paul
  */
 @Primitive(classes = {Integer.class, int.class})
-public class IntType implements Convertible<Integer> {
+public final class IntType implements Convertible<Integer> {
 
   /**
    * {@inheritDoc}

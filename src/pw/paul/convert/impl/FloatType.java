@@ -9,7 +9,7 @@ import pw.paul.convert.model.Primitive;
  * @author Paul
  */
 @Primitive(classes = {Float.class, float.class})
-public class FloatType implements Convertible<Float> {
+public final class FloatType implements Convertible<Float> {
 
   /**
    * {@inheritDoc}

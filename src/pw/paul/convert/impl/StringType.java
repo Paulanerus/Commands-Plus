@@ -7,7 +7,7 @@ import pw.paul.convert.model.Convertible;
  *
  * @author Paul
  */
-public class StringType implements Convertible<String> {
+public final class StringType implements Convertible<String> {
 
   /**
    * {@inheritDoc}

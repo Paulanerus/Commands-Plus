@@ -20,7 +20,7 @@ import pw.paul.convert.model.Primitive;
  *
  * @author Paul
  */
-public class TypeRegistry {
+public final class TypeRegistry {
 
   /**
    * Contains every registered object.
