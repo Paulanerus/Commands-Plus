@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import pw.paul.command.model.Command;
 import pw.paul.convert.transform.Transformer;
@@ -76,7 +77,7 @@ public final class CommandRepository {
    *
    * @param message The incoming message as {@link String}.
    */
-  public void onMessageReceived(String message) {
+  public void onMessageReceived(String message, Consumer<Exception> callback) {
     if (!message.startsWith(this.prefix)) {
       return;
     }
@@ -87,7 +88,9 @@ public final class CommandRepository {
 
     Optional<Command> queryCommand = this.findCommandByAliases(commandName);
 
-    queryCommand.ifPresent(command -> {
+    if (queryCommand.isPresent()) {
+      Command command = queryCommand.get();
+
       String[] params = Arrays.copyOfRange(messageArguments, 1, messageArguments.length);
 
       Method method;
@@ -104,12 +107,18 @@ public final class CommandRepository {
         method = command.findMethod();
       }
 
+      if(command.hasError(params, method)){
+        return;
+      }
+
       try {
         method.invoke(command, Transformer.create(params).toArray(method));
       } catch (IllegalAccessException | InvocationTargetException e) {
-        e.printStackTrace();
+        callback.accept(new NullPointerException());
       }
-    });
+    } else {
+      callback.accept(new NullPointerException());
+    }
   }
 
   /**

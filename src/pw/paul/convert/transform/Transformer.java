@@ -9,7 +9,7 @@ import pw.paul.convert.registry.TypeRegistry;
  *
  * @author Paul
  */
-public class Transformer {
+public final class Transformer {
 
   /**
    * Contains the data as strings

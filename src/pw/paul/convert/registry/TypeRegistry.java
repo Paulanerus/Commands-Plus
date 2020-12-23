@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import pw.paul.convert.exception.MissingTypeException;
 import pw.paul.convert.impl.BooleanType;
 import pw.paul.convert.impl.ByteType;
 import pw.paul.convert.impl.DoubleType;
@@ -48,7 +49,7 @@ public final class TypeRegistry {
   public static <T> T get(String[] data, Class<? extends T> clazz) {
     return (T) CONVERTIBLE_SET.stream()
       .filter(convertible -> matches(convertible, clazz)).findFirst()
-      .orElseThrow(IllegalStateException::new).convert(data);
+      .orElseThrow(MissingTypeException::new).convert(data);
   }
 
   /**
