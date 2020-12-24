@@ -79,22 +79,10 @@ public abstract class Command {
   }
 
   /**
-   * @return True, if this command has subcommand.
-   */
-  private boolean hasSubCommands() {
-    return this.getClass().isAnnotationPresent(SubCommands.class) && this.getClass()
-      .getAnnotation(SubCommands.class).subCommands().length > 0;
-  }
-
-  /**
    * @return Every subcommand of this {@link Command}.
    */
   private String[] getSubCommands() {
-    if (!this.hasSubCommands()) {
-      return new String[]{};
-    }
-
-    return this.getClass().getAnnotation(SubCommands.class).subCommands();
+    return this.getInfo().subCommands();
   }
 
   /**

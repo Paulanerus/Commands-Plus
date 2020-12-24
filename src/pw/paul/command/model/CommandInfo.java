@@ -34,4 +34,9 @@ public @interface CommandInfo {
    */
   boolean ignoreCase() default true;
 
+  /**
+   * @return Array of the subcommands.
+   */
+  String[] subCommands() default {};
+
 }
