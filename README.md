@@ -4,7 +4,8 @@ Commands+ is a framework designed to simplify the implementation of commands for
 
 ## Examples
 #### Create a new command
-
+Annotate your command with ```@CommandInfo``` and create a 
+method with ```@Execute``` so the framework knows where to insert your arguments.
 ```java
 @CommandInfo(name = "Test")
 public final class TestCommand extends Command {
@@ -17,10 +18,12 @@ public final class TestCommand extends Command {
 }
 ```
 #### Subcommands
-
+Easily allows you to create subcommands by annotating any method(not your main method) 
+with ```@SubExecute```
+in your command to 
+prevent ugly if-statements.
 ```java
-@SubCommands(subCommands = {"add"})
-@CommandInfo(name = "Test")
+@CommandInfo(name = "Test", subCommands = "add")
 public final class TestCommand extends Command {
 
   @Execute
@@ -37,7 +40,7 @@ public final class TestCommand extends Command {
 }
 ```
 
-### Error handling
+### Error handling 
 
 ```java 
 @CommandInfo(name = "Test")
@@ -55,6 +58,7 @@ public final class TestCommand extends Command {
 
 ### Types
 
+Create and registers your own types to use them in your command as an argument.
 ``` java
 public class MyWonderfulType implements Convertible<BigInteger> {
 
