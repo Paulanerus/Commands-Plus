@@ -3,6 +3,23 @@
 Commands+ is a framework designed to simplify the implementation of commands for the user.
 
 ## Examples
+
+#### CommandRepository
+Create a new instance and register your commands. Don't forget to implement 
+```CommandRepository#onMessageReceived``` somewhere otherwise your commands won't work
+```java
+public class Main {
+  
+  public static void main(String[] args) {
+    final CommandRepository commandRepository = new CommandRepository(".");
+
+    commandRepository.register(new TestCommand());
+
+    commandRepository.onMessageReceived("my command input", (exception) -> {});
+  }
+}
+```
+
 #### Create a new command
 Annotate your command with ```@CommandInfo``` and create a 
 method with ```@Execute``` so the framework knows where to insert your arguments.
@@ -75,3 +92,7 @@ register somewhere
 ``` java
 TypeRegistry.register(new MyWonderfulType());
 ```
+
+### TODO
+* Automatic type conversion
+* Better error handling
