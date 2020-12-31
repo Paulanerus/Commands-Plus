@@ -106,7 +106,8 @@ Register somewhere...
 TypeRegistry.register(new MyWonderfulType());
 ```
 
-### Dependency
+### Dependency 
+[![](https://jitpack.io/v/Paulanerus/Commands-Plus.svg)](https://jitpack.io/#Paulanerus/Commands-Plus)
 
 #### Maven
 ```xml
@@ -120,7 +121,7 @@ TypeRegistry.register(new MyWonderfulType());
 <dependency>
     <groupId>com.github.Paulanerus</groupId>
     <artifactId>Commands-Plus</artifactId>
-    <version>v1.0</version>
+    <version>v1.1</version>
 </dependency>
 ```
 
@@ -131,7 +132,7 @@ repositories {
 }
 	
 dependencies {
-    implementation 'com.github.Paulanerus:Commands-Plus:v1.0'
+    implementation 'com.github.Paulanerus:Commands-Plus:v1.1'
 }
 ```
 
