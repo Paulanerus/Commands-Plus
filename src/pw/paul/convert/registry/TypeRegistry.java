@@ -60,7 +60,7 @@ public final class TypeRegistry {
    *
    * @return If the classes are equal.
    */
-  private static boolean matches(Convertible<?> convertible, Class<?> clazz) {
+  public static boolean matches(Convertible<?> convertible, Class<?> clazz) {
     return hasPrimitive(convertible) ? Arrays.stream(getPrimitiveClasses(convertible))
       .map(
         Class::getName).anyMatch(primitiveName -> primitiveName.equals(clazz.getName()))
@@ -87,6 +87,13 @@ public final class TypeRegistry {
    */
   private static Class<?>[] getPrimitiveClasses(Convertible<?> convertible) {
     return convertible.getClass().getAnnotation(Primitive.class).classes();
+  }
+
+  /**
+   * @return A copy of the current convertible set.
+   */
+  public static HashSet<Convertible<?>> getEntries() {
+    return new HashSet<>(CONVERTIBLE_SET);
   }
 
   static {

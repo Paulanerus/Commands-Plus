@@ -107,12 +107,13 @@ public final class CommandRepository {
         method = command.findMethod();
       }
 
-      if(command.hasError(params, method)){
+      if (command.hasError(params, method)) {
         return;
       }
 
       try {
-        method.invoke(command, Transformer.create(params).toArray(method));
+        method
+          .invoke(command, Transformer.create(params).toArray(method.getParameters()));
       } catch (IllegalAccessException | InvocationTargetException e) {
         callback.accept(new NullPointerException());
       }

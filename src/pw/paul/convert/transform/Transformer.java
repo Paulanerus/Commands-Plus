@@ -1,7 +1,12 @@
 package pw.paul.convert.transform;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.OptionalInt;
 
+import pw.paul.convert.model.Convertible;
+import pw.paul.convert.model.Requires;
 import pw.paul.convert.registry.TypeRegistry;
 
 /**
@@ -34,19 +39,58 @@ public final class Transformer {
   /**
    * Convert every String to the requested type.
    *
-   * @param method Method representation to get the requested types.
+   * @param parameters Method parameters as an array required for the type conversion.
    *
    * @return String array converted to an object array.
    */
-  public Object[] toArray(final Method method) {
-    final Object[] objectData = new Object[this.data.length];
+  public Object[] toArray(final Parameter[] parameters) {
+    final Object[] objectData = new Object[parameters.length];
 
-    for ( int i = 0; i < method.getParameters().length; i++ ) {
+    int globalLength = 0;
+
+    for ( int i = 0; i < objectData.length; i++ ) {
+      Class<?> paramType = parameters[i].getType();
+
+      int length = this.getLength(paramType);
+
       objectData[i] = TypeRegistry
-        .get(new String[]{this.data[i]}, method.getParameters()[i].getType());
-    }
+        .get(
+          Arrays.copyOfRange(this.data, globalLength, globalLength + length),
+          paramType
+        );
 
+      globalLength += length;
+
+    }
     return objectData;
   }
 
+  /**
+   * Returns the number of needed arguments for a type to convert.
+   *
+   * @param type The type representation to search for.
+   *
+   * @return The length of the amount of needed arguments.
+   */
+  private int getLength(Class<?> type) {
+    Optional<Convertible<?>> convertibleEntry =
+      TypeRegistry.getEntries().stream().filter(convertible -> TypeRegistry.matches(
+        convertible,
+        type
+      )).findFirst();
+
+    if (convertibleEntry.isPresent()) {
+      Convertible<?> convertible = convertibleEntry.get();
+
+      OptionalInt amount =
+        Arrays.stream(convertible.getClass().getDeclaredMethods())
+          .filter(method -> method.isAnnotationPresent(Requires.class))
+          .mapToInt(method -> method.getAnnotation(Requires.class).amount()).findFirst();
+
+      if (amount.isPresent()) {
+        return amount.getAsInt();
+      }
+    }
+    return 1;
+  }
 }
