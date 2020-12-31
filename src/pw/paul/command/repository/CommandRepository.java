@@ -95,7 +95,7 @@ public final class CommandRepository {
 
       Method method;
 
-      if (command.isSubCommand(params[0])) {
+      if (params.length > 0 && command.isSubCommand(params[0])) {
         Optional<Method> subCommandMethod = command.findSubMethod(params[0]);
         if (subCommandMethod.isPresent()) {
           method = subCommandMethod.get();
