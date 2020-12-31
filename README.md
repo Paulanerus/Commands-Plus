@@ -6,7 +6,7 @@ Commands+ is a framework designed to simplify the implementation of commands for
 
 #### CommandRepository
 Create a new instance and register your commands. Don't forget to implement 
-```CommandRepository#onMessageReceived``` somewhere otherwise your commands won't work
+```CommandRepository#onMessageReceived``` somewhere otherwise your commands won't work.
 ```java
 public class Main {
   
@@ -87,7 +87,20 @@ public class MyWonderfulType implements Convertible<BigInteger> {
 }
 ```
 
-register somewhere
+If you are using more than one element of the array annotate with ```@Requires``` and 
+pass the amount of needed arguments.
+```java
+public final class MyWonderfulType implements Convertible<BigInteger> {
+
+  @Override
+  @Requires(amount = 2)
+  public BigInteger convert(String[] param) {
+    return new BigInteger(param[0], Integer.parseInt(param[1]));
+  }
+}
+```
+
+Register somewhere...
 
 ``` java
 TypeRegistry.register(new MyWonderfulType());
@@ -96,3 +109,5 @@ TypeRegistry.register(new MyWonderfulType());
 ### TODO
 * Automatic type conversion
 * Better error handling
+
+Feel free to message me on Discord ```Paulee#1284```
